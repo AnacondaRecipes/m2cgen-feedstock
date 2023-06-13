@@ -7,38 +7,45 @@ package:
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/m2cgen-{{ version }}.tar.gz
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   sha256: 9adfc5c6e693b1bb2e757c379e14ff97c95d1a11f9f6536882ebd7e402d34aa8
 
 build:
   number: 0
-  noarch: python
+  skip: true  # [py<37]
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   entry_points:
     - m2cgen = m2cgen.cli:main
-  script: {{ PYTHON }} -m pip install . -vv
 
 requirements:
   host:
     - pip
-    - python >=3.7
+    - python
+    - setuptools
+    - wheel
   run:
+    - python
     - numpy
-    - python >=3.7
 
 test:
   imports:
     - m2cgen
     - m2cgen.assemblers
+  requires:
+    - pip
   commands:
     - pip check
     - m2cgen --help
-  requires:
-    - pip
 
 about:
   home: https://github.com/BayesWitnesses/m2cgen
+  dev_url: https://github.com/BayesWitnesses/m2cgen
+  doc_url: https://github.com/BayesWitnesses/m2cgen
   summary: Code-generation for various ML models into native code.
+  description: |
+    m2cgen (Model 2 Code Generator) - is a lightweight library which provides an easy way to transpile trained statistical models into a native code (Python, C, Java, Go, JavaScript, Visual Basic, C#, PowerShell, R, PHP, Dart, Haskell, Ruby, F#, Rust, Elixir).
   license: MIT
+  license_family: MIT
   license_file: LICENSE
 
 extra:
